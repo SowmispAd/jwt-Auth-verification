@@ -1,18 +1,29 @@
-export default function Dashboard(){
+import { useEffect, useState } from "react"
+import api from "../utils/api"
 
- const user = JSON.parse(localStorage.getItem("user"));
+function Dashboard() {
 
- const logout = ()=>{
-   localStorage.removeItem("token");
-   localStorage.removeItem("user");
-   window.location.href="/";
- }
+  const [data, setData] = useState(null)
 
- return(
-  <div>
-    <h1>Dashboard</h1>
-    <p>Welcome {user?.name}</p>
-    <button onClick={logout}>Logout</button>
-  </div>
- )
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+
+        const res = await api.get("/dashboard")
+
+        setData(res.data)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchData();
+
+  }, [])
+
+  return <div>{data ? data.message : "Loading..."}</div>
 }
+
+export default Dashboard

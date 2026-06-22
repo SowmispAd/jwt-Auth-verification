@@ -1,32 +1,20 @@
-import { useState } from "react";
-import axios from "axios";
+import api from "../utils/api"
 
-export default function Login() {
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
+const handleLogin = async () => {
 
-  const handleLogin = async () => {
-    try{
-      const res = await axios.post("http://localhost:5000/api/auth/login",{
-        email,
-        password
-      });
+  try {
 
-      localStorage.setItem("token",res.data.token);
-      localStorage.setItem("user",JSON.stringify(res.data.user));
+    const res = await api.post("/api/auth/login", {
+      email,
+      password
+    })
 
-      window.location.href="/dashboard";
-    }catch(err){
-      alert("Login failed");
-    }
-  };
+    localStorage.setItem("token", res.data.token)
 
-  return(
-    <div>
-      <h2>Login</h2>
-      <input placeholder="email" onChange={(e)=>setEmail(e.target.value)}/>
-      <input type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)}/>
-      <button onClick={handleLogin}>Login</button>
-    </div>
-  );
+    window.location.href = "/dashboard"
+
+  } catch (error) {
+    console.log(error)
+  }
+
 }
